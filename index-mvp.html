@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synaptic Wars MVP - Neuro Engine</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: linear-gradient(135deg, #0a0a2a 0%, #1a1a4a 100%); color: white; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
+        .game-container { position: relative; width: 100vw; height: 100vh; }
+        #game-canvas { width: 100%; height: 100%; display: block; }
+        .controls-overlay { position: fixed; bottom: 20px; left: 20px; background: rgba(10, 10, 42, 0.8); padding: 20px; border-radius: 15px; border: 2px solid #8A2BE2; z-index: 100; }
+        .controls-title { color: #FFD700; margin-bottom: 15px; font-size: 1.2rem; }
+        .ability-buttons { display: flex; gap: 10px; margin-bottom: 15px; }
+        .ability-btn { padding: 10px 15px; background: linear-gradient(45deg, #8A2BE2, #00BFFF); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; transition: all 0.3s ease; }
+        .ability-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4); }
+        .ability-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .eeg-controls { display: flex; gap: 10px; }
+        .eeg-btn { padding: 8px 12px; background: rgba(255, 215, 0, 0.2); color: #FFD700; border: 1px solid #FFD700; border-radius: 20px; cursor: pointer; font-size: 0.8rem; }
+        .status-bar {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 10, 42, 0.8);
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 1px solid #00BFFF;
+            font-size: 0.9rem;
+            text-align: center;
+            z-index: 500;
+        }
+        .loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0a0a2a; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 1000; }
+        .loading-text { font-size: 1.5rem; color: #00BFFF; margin-bottom: 20px; }
+        .neural-loader { width: 60px; height: 60px; border: 3px solid rgba(138, 43, 226, 0.3); border-top: 3px solid #8A2BE2; border-radius: 50%; animation: spin 1s linear infinite; }
+        .begin-btn { margin-top: 20px; padding: 10px 16px; background: linear-gradient(45deg, #8A2BE2, #00BFFF); color: white; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="loading-screen" id="loadingScreen">
+        <div class="neural-loader"></div>
+        <div class="loading-text">Initializing Neuro Engine...</div>
+        <button class="begin-btn" id="beginBtn">Begin Neural Journey</button>
+    </div>
+    <div class="game-container">
+        <canvas id="game-canvas"></canvas>
+        <div class="controls-overlay">
+            <div class="controls-title">Neuro Abilities</div>
+            <div class="ability-buttons">
+                <button class="ability-btn" onclick="window.eventBus.publish('useAbility', 'dendritic_lightning')" id="btn-q">Q - Dendritic Lightning</button>
+                <button class="ability-btn" onclick="window.eventBus.publish('useAbility', 'serotonin_tsunami')" id="btn-w">W - Serotonin Tsunami</button>
+                <button class="ability-btn" onclick="window.eventBus.publish('useAbility', 'quantum_entanglement')" id="btn-e">E - Quantum Entanglement</button>
+            </div>
+            <div class="eeg-controls">
+                <button class="eeg-btn" onclick="window.eventBus.publish('setEEGMode', 'focused')">Focused Mode</button>
+                <button class="eeg-btn" onclick="window.eventBus.publish('setEEGMode', 'relaxed')">Relaxed Mode</button>
+                <button class="eeg-btn" onclick="window.eventBus.publish('setEEGMode', 'stressed')">Stressed Mode</button>
+                <button class="eeg-btn" onclick="window.eventBus.publish('setEEGMode', 'dynamic')">Dynamic Mode</button>
+            </div>
+        </div>
+        <div class="status-bar" id="statusBar">
+            Tanglers: <span id="tanglerCount">0</span> | 
+            Energy: <span id="playerEnergy">100</span> | 
+            Score: <span id="gameScore">0</span>
+        </div>
+    </div>
+    <script type="module">
+        import './mvp-main.js';
+
+        const loadingScreen = document.getElementById('loadingScreen');
+        const beginBtn = document.getElementById('beginBtn');
+        
+        const tanglerCountEl = document.getElementById('tanglerCount');
+        const playerEnergyEl = document.getElementById('playerEnergy');
+        const gameScoreEl = document.getElementById('gameScore');
+
+        const abilityButtonMap = { 
+            dendritic_lightning: 'btn-q', 
+            serotonin_tsunami: 'btn-w', 
+            quantum_entanglement: 'btn-e' 
+        };
+        const abilityKeyMap = { 
+            dendritic_lightning: 'Q', 
+            serotonin_tsunami: 'W', 
+            quantum_entanglement: 'E' 
+        };
+
+        // UI Subscription to game state
+        window.addEventListener('DOMContentLoaded', () => {
+            // Hide loading screen after a delay or on button click
+            const hideLoadingScreen = () => {
+                loadingScreen.style.display = 'none';
+                if (window.eventBus) {
+                    window.eventBus.publish('startGame');
+                }
+            };
+            
+            setTimeout(hideLoadingScreen, 2000); // Auto-start
+            beginBtn.addEventListener('click', hideLoadingScreen);
+
+            // Subscribe to the central game state update event
+            if (window.eventBus) {
+                window.eventBus.subscribe('gameStateUpdate', (state) => {
+                    // Update status bar
+                    tanglerCountEl.textContent = state.tanglerCount;
+                    playerEnergyEl.textContent = Math.round(state.playerEnergy);
+                    gameScoreEl.textContent = state.score;
+
+                    // Update ability buttons
+                    Object.keys(state.abilities).forEach(abilityName => {
+                        const ability = state.abilities[abilityName];
+                        const buttonId = abilityButtonMap[abilityName];
+                        const button = document.getElementById(buttonId);
+                        if (button) {
+                            button.disabled = !ability.isReady;
+                            const cooldownText = ability.isReady ? '' : `(${Math.ceil(ability.currentCooldown)}s)`;
+                            button.textContent = `${abilityKeyMap[abilityName]} - ${ability.name} ${cooldownText}`;
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
