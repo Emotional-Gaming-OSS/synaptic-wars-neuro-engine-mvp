@@ -1,0 +1,62 @@
+title: "🔬 [RESEARCH] - Research Collaboration"
+labels: ["research", "collaboration"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🔬 Research Collaboration
+        Looking for research partners in neuroscience, AI, or emotionally intelligent gaming?
+        
+  - type: textarea
+    id: research-focus
+    attributes:
+      label: "🎯 Research Focus"
+      description: "What area are you researching?"
+      placeholder: "I'm researching..."
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: field
+    attributes:
+      label: "🎓 Field of Study"
+      options:
+        - Neuroscience
+        - Affective Computing
+        - Artificial Intelligence
+        - Human-Computer Interaction
+        - Game Development
+        - Psychology
+        - Other
+    validations:
+      required: true
+      
+  - type: textarea
+    id: expertise
+    attributes:
+      label: "💼 Your Expertise"
+      description: "What skills/knowledge do you bring?"
+      
+  - type: textarea
+    id: looking-for
+    attributes:
+      label: "👥 Looking For"
+      description: "What kind of collaboration are you seeking?"
+      placeholder: "I need help with..."
+      
+  - type: textarea
+    id: goals
+    attributes:
+      label: "🎯 Project Goals"
+      description: "What do you hope to achieve?"
+      
+  - type: checkboxes
+    id: output
+    attributes:
+      label: "📄 Expected Outputs"
+      options:
+        - label: "Research paper"
+        - label: "Open source contribution"
+        - label: "Conference presentation"
+        - label: "Product development"
+        - label: "Educational content"

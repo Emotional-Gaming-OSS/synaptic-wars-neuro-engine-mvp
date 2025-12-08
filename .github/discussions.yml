@@ -1,0 +1,20 @@
+categories:
+  - name: "💡 Ideas & Brainstorming"
+    description: "Share your visionary ideas for emotionally intelligent gaming"
+    emoji: "💡"
+    
+  - name: "❓ Q&A"
+    description: "Get help and ask questions about Dynamic Narrative Director"
+    emoji: "❓"
+    
+  - name: "🎮 Show & Tell"
+    description: "Share your projects and creations using DND"
+    emoji: "🎮"
+    
+  - name: "🔬 Research & Neuroscience"
+    description: "Discuss emotion detection, AI research, and neuroscience"
+    emoji: "🔬"
+    
+  - name: "📢 Announcements"
+    description: "Project updates and important announcements"
+    emoji: "📢"

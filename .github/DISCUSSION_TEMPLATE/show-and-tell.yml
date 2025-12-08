@@ -1,0 +1,66 @@
+title: "🎮 [SHOWCASE] - Your Project Title"
+labels: ["showcase", "community"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🎮 Share Your Creation
+        Built something amazing with Dynamic Narrative Director? Show us!
+        
+  - type: textarea
+    id: project-description
+    attributes:
+      label: "🚀 Project Description"
+      description: "Tell us about your project"
+      placeholder: "I built..."
+    validations:
+      required: true
+      
+  - type: input
+    id: project-url
+    attributes:
+      label: "🔗 Project URL"
+      description: "Link to your project (GitHub, demo, etc.)"
+      placeholder: "https://..."
+      
+  - type: dropdown
+    id: project-type
+    attributes:
+      label: "🏗️ Project Type"
+      options:
+        - Game Integration
+        - Research Project
+        - Tool/Extension
+        - Demo/Example
+        - Educational Content
+    validations:
+      required: true
+      
+  - type: textarea
+    id: dnd-usage
+    attributes:
+      label: "🧠 DND Usage"
+      description: "How did you use Dynamic Narrative Director?"
+      placeholder: "I used emotion detection for..."
+      
+  - type: textarea
+    id: challenges
+    attributes:
+      label: "🏆 Challenges & Solutions"
+      description: "What challenges did you face and how did you solve them?"
+      
+  - type: textarea
+    id: lessons
+    attributes:
+      label: "📚 Lessons Learned"
+      description: "What did you learn from this project?"
+      
+  - type: checkboxes
+    id: feedback
+    attributes:
+      label: "💬 Feedback Request"
+      options:
+        - label: "Looking for technical feedback"
+        - label: "Seeking user experience feedback"
+        - label: "Open to collaboration"
+        - label: "Just sharing my work"

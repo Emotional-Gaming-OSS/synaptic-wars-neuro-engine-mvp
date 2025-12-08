@@ -1,0 +1,58 @@
+title: "💡 [IDEA] - Your Idea Title"
+labels: ["idea", "brainstorming"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 💡 Share Your Vision
+        Got a revolutionary idea for emotionally intelligent gaming? Let's brainstorm!
+        
+  - type: textarea
+    id: idea-description
+    attributes:
+      label: "🎯 Idea Description"
+      description: "Describe your idea in detail"
+      placeholder: "What if we could..."
+    validations:
+      required: true
+      
+  - type: textarea
+    id: problem-solved
+    attributes:
+      label: "🔧 Problem Solved"
+      description: "What problem does this solve?"
+      placeholder: "This would help with..."
+      
+  - type: dropdown
+    id: category
+    attributes:
+      label: "🎮 Category"
+      description: "What area does this idea impact?"
+      options:
+        - Emotion Detection
+        - Narrative Generation
+        - Game Integration
+        - Performance
+        - User Experience
+        - Developer Tools
+        - Research
+    validations:
+      required: true
+      
+  - type: textarea
+    id: implementation
+    attributes:
+      label: "⚡ Implementation Thoughts"
+      description: "Any thoughts on how this could be implemented?"
+      placeholder: "We could use..."
+      
+  - type: checkboxes
+    id: collaboration
+    attributes:
+      label: "👥 Collaboration"
+      description: "Are you interested in helping implement this?"
+      options:
+        - label: "I'd like to contribute code"
+        - label: "I can help with design"
+        - label: "I have relevant research"
+        - label: "Just sharing ideas for now"

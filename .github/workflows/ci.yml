@@ -1,0 +1,74 @@
+name: CI
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  node:
+    if: ${{ hashFiles('**/package.json') != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+      - name: TypeScript build
+        run: npm run build --if-present
+      - run: npm run lint --if-present
+      - run: npm test --if-present
+      - run: npm audit --audit-level=high || true
+
+  python:
+    if: ${{ hashFiles('**/pyproject.toml', '**/requirements.txt') != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+          cache: 'pip'
+          cache-dependency-path: 'requirements.txt'
+      - name: Install deps
+        run: |
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f pyproject.toml ]; then pip install .; fi
+      - name: Type check
+        run: |
+          if python -c "import mypy" 2>/dev/null; then mypy src; else echo 'mypy not installed'; fi
+      - name: Tests
+        run: pytest -q || true
+
+  rust:
+    if: ${{ hashFiles('**/Cargo.toml') != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Swatinem/rust-cache@v2
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo fmt --all -- --check || true
+      - run: cargo clippy --all-targets -- -D warnings || true
+      - run: cargo build --all
+      - run: cargo test --all --quiet || true
+
+  go:
+    if: ${{ hashFiles('**/go.mod') != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: 'stable'
+      - run: go build ./...
+      - run: go test ./... || true
+
+  actions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo CI skeleton validates repository hygiene

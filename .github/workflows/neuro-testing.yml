@@ -1,0 +1,74 @@
+name: Neuro-Specific Testing
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly on Sunday
+  workflow_dispatch:
+    inputs:
+      test_type:
+        description: 'Type of neuro-test to run'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+        - all
+        - eeg-simulation
+        - emotion-detection
+        - ai-integration
+        - performance
+
+jobs:
+  neuro-validation:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+
+    - name: Install JavaScript dependencies
+      run: |
+        npm install
+
+    - name: EEG Simulation Tests
+      if: ${{ github.event.inputs.test_type == 'all' || github.event.inputs.test_type == 'eeg-simulation' }}
+      run: |
+        npm run test:eeg-simulation
+        node neuro/simulations/generate_eeg_data.js --duration 60 --output simulated_eeg.csv
+
+    - name: Emotion Detection Validation
+      if: ${{ github.event.inputs.test_type == 'all' || github.event.inputs.test_type == 'emotion-detection' }}
+      run: |
+        npm run test:emotion-detection
+        node neuro/validation/validate_emotion_models.js --dataset test_dataset
+
+    - name: AI Integration Tests
+      if: ${{ github.event.inputs.test_type == 'all' || github.event.inputs.test_type == 'ai-integration' }}
+      env:
+        DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+      run: |
+        npm run test:ai-integration
+        node neuro/ai/test_prompts.js --validate-responses
+
+    - name: Performance Benchmarking
+      if: ${{ github.event.inputs.test_type == 'all' || github.event.inputs.test_type == 'performance' }}
+      run: |
+        npm run benchmark:neuro
+        node tests/performance/neuro_benchmark.js --benchmark-json benchmark_results.json
+
+    - name: Generate Neuro-Report
+      run: |
+        node neuro/reporting/generate_test_report.js
+        cat neuro_test_report.md >> $GITHUB_STEP_SUMMARY
+
+    - name: Upload Test Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: neuro-test-results
+        path: |
+          benchmark_results.json
+          simulated_eeg.csv
+          test_reports/

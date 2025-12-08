@@ -1,0 +1,61 @@
+title: "❓ [Q&A] - Your Question"
+labels: ["question", "help-wanted"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ❓ Ask the Community
+        Have a question about Dynamic Narrative Director? We're here to help!
+        
+  - type: textarea
+    id: question
+    attributes:
+      label: "🎯 Your Question"
+      description: "What would you like to know?"
+      placeholder: "How do I..."
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: category
+    attributes:
+      label: "📚 Question Category"
+      options:
+        - Installation & Setup
+        - Emotion Detection
+        - Narrative Generation
+        - Muse Headset Integration
+        - API Usage
+        - Customization
+        - Troubleshooting
+        - Theory & Concepts
+    validations:
+      required: true
+      
+  - type: textarea
+    id: context
+    attributes:
+      label: "🔍 Context"
+      description: "What are you trying to achieve?"
+      placeholder: "I'm building..."
+      
+  - type: textarea
+    id: tried
+    attributes:
+      label: "💪 What You've Tried"
+      description: "What solutions have you attempted already?"
+      
+  - type: input
+    id: environment
+    attributes:
+      label: "🖥️ Your Environment"
+      placeholder: "OS, Node version, Muse headset, etc."
+      
+  - type: checkboxes
+    id: urgency
+    attributes:
+      label: "⏰ Urgency"
+      options:
+        - label: "Blocking my project"
+        - label: "Important but not urgent"
+        - label: "Just curious"

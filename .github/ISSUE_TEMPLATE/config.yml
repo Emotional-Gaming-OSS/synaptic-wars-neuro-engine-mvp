@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 🧠 GitHub Discussions
+    url: https://github.com/Menslanista/Emotional-Gaming-OSS-dynamic-narrative-director/discussions
+    about: Ask questions and share ideas with the community
+  - name: 📚 Documentation
+    url: https://github.com/Emotional-Gaming-OSS-dynamic-narrative-director#readme
+    about: Check our documentation for answers
+  - name: 🐛 Bug Reports
+    url: https://github.com/Menslanista/Emotional-Gaming-OSS-dynamic-narrative-director/issues/new?template=bug-report.md
+    about: Report a bug or unexpected behavior
