@@ -10,7 +10,7 @@ jobs:
     if: ${{ hashFiles('**/package.json') != '' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
@@ -28,7 +28,7 @@ jobs:
     if: ${{ hashFiles('**/pyproject.toml', '**/requirements.txt') != '' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
         with:
           python-version: '3.x'
@@ -48,7 +48,7 @@ jobs:
     if: ${{ hashFiles('**/Cargo.toml') != '' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: Swatinem/rust-cache@v2
       - uses: dtolnay/rust-toolchain@stable
       - run: cargo fmt --all -- --check || true
@@ -60,7 +60,7 @@ jobs:
     if: ${{ hashFiles('**/go.mod') != '' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-go@v5
         with:
           go-version: 'stable'
@@ -70,5 +70,5 @@ jobs:
   actions:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: echo CI skeleton validates repository hygiene
