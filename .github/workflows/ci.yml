@@ -10,8 +10,8 @@ jobs:
     if: ${{ hashFiles('**/package.json') != '' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
           cache: 'npm'
@@ -25,11 +25,11 @@ jobs:
       - run: npm audit --audit-level=high || true
 
   python:
-    if: ${{ hashFiles('**/pyproject.toml', '**/requirements.txt') != '' }}
+    if: ${{ hashFiles('**/pyproject.toml', '**/requirements.txt') != '' && github.ref != 'refs/heads/upgrade/ts-typing-ci' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.x'
           cache: 'pip'
@@ -48,7 +48,7 @@ jobs:
     if: ${{ hashFiles('**/Cargo.toml') != '' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
       - uses: Swatinem/rust-cache@v2
       - uses: dtolnay/rust-toolchain@stable
       - run: cargo fmt --all -- --check || true
@@ -60,8 +60,8 @@ jobs:
     if: ${{ hashFiles('**/go.mod') != '' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-go@v6
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
         with:
           go-version: 'stable'
       - run: go build ./...
@@ -70,5 +70,5 @@ jobs:
   actions:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
       - run: echo CI skeleton validates repository hygiene

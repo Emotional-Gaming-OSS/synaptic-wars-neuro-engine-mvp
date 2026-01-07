@@ -4,7 +4,9 @@ export class NeuroDashboardEnhanced {
         this.emotionalDirector = emotionalDirector;
         this.dashboardElement = null;
         this.updateInterval = null;
+        this.tanglerCount = 0;
         this.initializeDashboard();
+        this.subscribeToGameState();
     }
 
     initializeDashboard() {
@@ -68,6 +70,10 @@ export class NeuroDashboardEnhanced {
                         <div class="performance-item">
                             <span class="perf-label">Engagement</span>
                             <span class="perf-value" id="engagement-score">0%</span>
+                        </div>
+                        <div class="performance-item">
+                            <span class="perf-label">Tau Tanglers</span>
+                            <span class="perf-value" id="tangler-count">0</span>
                         </div>
                         <div class="performance-item">
                             <span class="perf-label">Total Adaptations</span>
@@ -160,6 +166,22 @@ export class NeuroDashboardEnhanced {
         });
     }
 
+    subscribeToGameState() {
+        if (typeof window.eventBus !== 'undefined') {
+            window.eventBus.subscribe('gameStateUpdate', (state) => {
+                this.tanglerCount = state.tanglerCount || 0;
+                this.updateTanglerCount();
+            });
+        }
+    }
+
+    updateTanglerCount() {
+        const tanglerCountElement = document.getElementById('tangler-count');
+        if (tanglerCountElement) {
+            tanglerCountElement.textContent = this.tanglerCount;
+        }
+    }
+
     startUpdates() {
         this.updateInterval = setInterval(() => {
             this.updateDashboard();
@@ -188,6 +210,7 @@ export class NeuroDashboardEnhanced {
         document.getElementById('success-rate').textContent = `${Math.round(performance.successRate * 100)}%`;
         document.getElementById('engagement-score').textContent = `${Math.round(performance.engagementScore * 100)}%`;
         document.getElementById('total-adaptations').textContent = performance.adaptationTotal;
+        this.updateTanglerCount(); // Update tangler count as well
         const recommendations = emotionalState?.recommendations || ['Continue playing for neuro-analysis'];
         const recommendationsList = document.getElementById('recommendations-list');
         recommendationsList.innerHTML = recommendations.map(rec => `<div class="recommendation-item">${rec}</div>`).join('');
